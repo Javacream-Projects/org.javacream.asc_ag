@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bindings version="2.1" xmlns="http://java.sun.com/xml/ns/jaxb">
+  <!--
+
+Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
+Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+Generiert: 2017.10.22 um 12:23:03 PM CEST 
+
+  -->
+  <bindings scd="x-schema::tns" xmlns:tns="http://org.javacream.asc">
+    <schemaBindings map="false">
+      <package name="org.javacream.asc_ag.types"/>
+    </schemaBindings>
+    <bindings scd="~tns:DMS_HeaderType">
+      <class ref="org.javacream.asc_ag.types.DMSHeaderType"/>
+    </bindings>
+    <bindings scd="~tns:E1EDK01Type">
+      <class ref="org.javacream.asc_ag.types.E1EDK01Type"/>
+    </bindings>
+    <bindings scd="~tns:E1EDK03Type">
+      <class ref="org.javacream.asc_ag.types.E1EDK03Type"/>
+    </bindings>
+    <bindings scd="~tns:E1EDKA1Type">
+      <class ref="org.javacream.asc_ag.types.E1EDKA1Type"/>
+    </bindings>
+    <bindings scd="~tns:E1EDK02Type">
+      <class ref="org.javacream.asc_ag.types.E1EDK02Type"/>
+    </bindings>
+    <bindings scd="~tns:E1EDK35Type">
+      <class ref="org.javacream.asc_ag.types.E1EDK35Type"/>
+    </bindings>
+    <bindings scd="~tns:E1EDP19Type">
+      <class ref="org.javacream.asc_ag.types.E1EDP19Type"/>
+    </bindings>
+    <bindings scd="~tns:E1EDPT2Type">
+      <class ref="org.javacream.asc_ag.types.E1EDPT2Type"/>
+    </bindings>
+    <bindings scd="~tns:E1EDPT1Type">
+      <class ref="org.javacream.asc_ag.types.E1EDPT1Type"/>
+    </bindings>
+    <bindings scd="~tns:E1EDP01Type">
+      <class ref="org.javacream.asc_ag.types.E1EDP01Type"/>
+    </bindings>
+    <bindings scd="~tns:IDOCType">
+      <class ref="org.javacream.asc_ag.types.IDOCType"/>
+    </bindings>
+    <bindings scd="~tns:ORDERS05Type">
+      <class ref="org.javacream.asc_ag.types.ORDERS05Type"/>
+    </bindings>
+    <bindings scd="~tns:Request_DetailsType">
+      <class ref="org.javacream.asc_ag.types.RequestDetailsType"/>
+    </bindings>
+    <bindings scd="~tns:MT_VISInfoReqType">
+      <class ref="org.javacream.asc_ag.types.MTVISInfoReqType"/>
+    </bindings>
+    <bindings scd="~tns:E1EDKT1Type">
+      <class ref="org.javacream.asc_ag.types.E1EDKT1Type"/>
+    </bindings>
+    <bindings scd="~tns:E1EDKT2Type">
+      <class ref="org.javacream.asc_ag.types.E1EDKT2Type"/>
+    </bindings>
+  </bindings>
+</bindings>
+

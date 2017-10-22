@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://org.javacream.asc" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://org.javacream.asc">
+	<!-- <xs:element name="DMS_Header" type="DMS_HeaderType" /> -->
+	<xs:complexType name="DMS_HeaderType">
+		<xs:sequence>
+			<xs:element type="xs:string" name="IDocTyp" />
+			<xs:element type="xs:string" name="MesTyp" />
+			<xs:element type="xs:string" name="TimeStamp" />
+			<xs:element type="xs:string" name="CustomerNum" />
+			<xs:element type="xs:string" name="ISServerID" />
+			<xs:element type="xs:int" name="RespNo" />
+			<xs:element type="xs:int" name="RespIndex" />
+			<xs:element type="xs:string" name="ISServiceID" />
+			<xs:element type="xs:string" name="PLType" />
+			<xs:element type="xs:string" name="PLCategory" />
+			<xs:element type="xs:string" name="Region" />
+			<xs:element type="xs:string" name="Language" />
+			<xs:element type="xs:string" name="IDocType" />
+			<xs:element type="xs:string" name="MesType" />
+			<xs:element type="xs:string" name="Werks" />
+			<xs:element type="xs:string" name="UserID" />
+			<xs:element type="xs:string" name="PartnerCode" />
+			<xs:element type="xs:string" name="CustOrderNo" />
+			<xs:element type="xs:string" name="CustOrderDate" />
+			<xs:element type="xs:string" name="Password" />
+			<xs:element type="xs:string" name="DMSToken" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="E1EDK01Type">
+		<xs:sequence>
+			<xs:element type="xs:string" name="BSART" />
+			<xs:element type="xs:string" name="BELNR" />
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="SEGMENT" />
+	</xs:complexType>
+	<xs:complexType name="E1EDK03Type">
+		<xs:sequence>
+			<xs:element type="xs:string" name="IDDAT" />
+			<xs:element type="xs:string" name="DATUM" />
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="SEGMENT" />
+	</xs:complexType>
+	<xs:complexType name="E1EDKA1Type">
+		<xs:sequence>
+			<xs:element type="xs:string" name="PARVW" />
+			<xs:element type="xs:string" name="PARTN" />
+			<xs:element type="xs:string" name="LAND1" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="SEGMENT" use="optional" />
+	</xs:complexType>
+	<xs:complexType name="E1EDK02Type">
+		<xs:sequence>
+			<xs:element type="xs:string" name="QUALF" />
+			<xs:element type="xs:string" name="BELNR" />
+			<xs:element type="xs:string" name="DATUM" />
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="SEGMENT" />
+	</xs:complexType>
+	<xs:complexType name="E1EDK35Type">
+		<xs:sequence>
+			<xs:element type="xs:string" name="QUALZ" />
+			<xs:element type="xs:string" name="CUSADD" />
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="SEGMENT" />
+	</xs:complexType>
+	<xs:complexType name="E1EDP19Type">
+		<xs:sequence>
+			<xs:element type="xs:string" name="QUALF" />
+			<xs:element type="xs:string" name="IDTNR" />
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="SEGMENT" use="optional" />
+	</xs:complexType>
+	<xs:complexType name="E1EDPT2Type">
+		<xs:sequence>
+			<xs:element type="xs:string" name="TDLINE" maxOccurs="unbounded"
+				minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="SEGMENT" />
+	</xs:complexType>
+	<xs:complexType name="E1EDPT1Type">
+		<xs:sequence>
+			<xs:element type="xs:string" name="TDID" />
+			<xs:element type="xs:string" name="TSSPRAS" />
+			<xs:element type="xs:string" name="TSSPRAS_ISO" />
+			<xs:element type="E1EDPT2Type" name="E1EDPT2" />
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="SEGMENT" />
+	</xs:complexType>
+	<xs:complexType name="E1EDP01Type">
+		<xs:sequence>
+			<xs:element type="xs:string" name="POSEX" />
+			<xs:element type="xs:string" name="MENGE" />
+			<xs:element type="E1EDP19Type" name="E1EDP19" />
+			<xs:element type="E1EDPT1Type" name="E1EDPT1" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="SEGMENT" use="optional" />
+	</xs:complexType>
+	<xs:complexType name="IDOCType">
+		<xs:sequence>
+			<xs:element type="E1EDK01Type" name="E1EDK01" />
+			<xs:element type="E1EDK03Type" name="E1EDK03" />
+			<xs:element type="E1EDKA1Type" name="E1EDKA1"
+				maxOccurs="unbounded" minOccurs="0" />
+			<xs:element type="E1EDK02Type" name="E1EDK02" />
+			<xs:element type="E1EDK35Type" name="E1EDK35" />
+			<xs:element name="E1EDKT1" type="E1EDKT1Type" />
+			<xs:element name="E1EDKT2" type="E1EDKT2Type" />
+			<xs:element type="E1EDP01Type" name="E1EDP01"
+				maxOccurs="unbounded" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="BEGIN" />
+	</xs:complexType>
+	<xs:complexType name="ORDERS05Type">
+		<xs:sequence>
+			<xs:element type="IDOCType" name="IDOC" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Request_DetailsType">
+		<xs:sequence>
+			<xs:element type="xs:string" name="VIN" />
+			<xs:element type="xs:string" name="VehicleNum" />
+			<xs:element type="xs:string" name="VehicleRegNum" />
+			<xs:element type="xs:string" name="CountryKeyISO" />
+			<xs:element type="xs:string" name="ServiceInfoFlag" />
+			<xs:element type="xs:string" name="MaintenancePlanFlag" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MT_VISInfoReqType">
+		<xs:sequence>
+			<xs:element type="DMS_HeaderType" name="DMS_Header" />
+			<xs:element type="Request_DetailsType" name="Request_Details" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="E1EDKT1Type">
+
+		<xs:sequence>
+			<xs:element name="TDID" type="xs:string"></xs:element>
+			<xs:element name="TSSPRAS" type="xs:string"></xs:element>
+			<xs:element name="TSSPRAS_ISO" type="xs:string"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="E1EDKT2Type">
+		<xs:sequence>
+			<xs:element name="TDLINE" type="xs:string"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>
