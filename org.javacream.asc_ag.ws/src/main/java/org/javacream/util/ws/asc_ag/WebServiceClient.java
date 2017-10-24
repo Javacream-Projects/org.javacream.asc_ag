@@ -1,15 +1,20 @@
 package org.javacream.util.ws.asc_ag;
 
+import java.io.IOException;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 
 import org.javacream.asc_ag.types.DMSHeaderType;
 import org.javacream.asc_ag.types.ORDERS05Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.w3c.dom.Node;
@@ -21,19 +26,56 @@ public class WebServiceClient {
 	private WebServiceTemplate webServiceTemplate;
 	@Autowired
 	private Marshaller marshaller;
+	@Autowired
+	private Unmarshaller unmarshaller;
+	@Autowired
+	private Transformer transformer;
 
-	@Autowired SaajSoapMessage message;
-	public DOMResult callWebService(DMSHeaderType dmsHeader, ORDERS05Type orders05) {
+	public DmsHeaderAndOrders05 callWebService(DmsHeaderAndOrders05 dmsHeaderAndOrders05) {
 		try {
-			DOMSource domSource = new DOMSource(message.getDocument());
-			DOMResult domResult = new DOMResult();
-			marshaller.marshal(new JAXBElement<DMSHeaderType>(new QName("DMS_Header"), DMSHeaderType.class, dmsHeader), (Node)message.getSaajMessage().getSOAPBody());
-			marshaller.marshal(new JAXBElement<ORDERS05Type>(new QName("ORDERS05"), ORDERS05Type.class, orders05), (Node)message.getSaajMessage().getSOAPBody());
-			webServiceTemplate.sendSourceAndReceiveToResult(domSource, domResult);
-			return domResult;
+			final DmsHeaderAndOrders05 result = new DmsHeaderAndOrders05();
+			WebServiceMessageCallback webServiceRequestMessageCallback = new WebServiceMessageCallback() {
+
+				@Override
+				public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
+					SaajSoapMessage soapMessage = (SaajSoapMessage) message;
+					try {
+						Node body = (Node) soapMessage.getSaajMessage().getSOAPBody();
+						marshaller.marshal(new JAXBElement<DMSHeaderType>(new QName("DMS_Header"), DMSHeaderType.class,
+								dmsHeaderAndOrders05.getDmsHeader()), body);
+						marshaller.marshal(new JAXBElement<ORDERS05Type>(new QName("ORDERS05"), ORDERS05Type.class,
+								dmsHeaderAndOrders05.getOrder05()), body);
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+
+					}
+				}
+			};
+			WebServiceMessageCallback webServiceResponseMessageCallback = new WebServiceMessageCallback() {
+
+				@Override
+				public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
+					SaajSoapMessage soapMessage = (SaajSoapMessage) message;
+					try {
+						Node body = (Node) soapMessage.getSaajMessage().getSOAPBody();
+						JAXBElement<DMSHeaderType> resultDmsHeader = unmarshaller.unmarshal(body.getFirstChild(),
+								DMSHeaderType.class);
+						JAXBElement<ORDERS05Type> resultOrders05 = unmarshaller.unmarshal(body.getLastChild(),
+								ORDERS05Type.class);
+						result.setDmsHeader(resultDmsHeader.getValue());
+						result.setOrder05(resultOrders05.getValue());
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+
+					}
+				}
+			};
+			webServiceTemplate.sendAndReceive(webServiceRequestMessageCallback, webServiceResponseMessageCallback);
+
+			return result;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-			
+
 		}
 	}
 

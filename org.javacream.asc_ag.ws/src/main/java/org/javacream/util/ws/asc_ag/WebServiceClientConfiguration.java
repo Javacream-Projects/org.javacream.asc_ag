@@ -1,20 +1,23 @@
 package org.javacream.util.ws.asc_ag;
 
+import java.io.IOException;
+
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.soap.MessageFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
+import org.springframework.ws.context.MessageContext;
 
 @Configuration
 @ComponentScan(basePackages = "org.javacream.util")
@@ -39,6 +42,13 @@ public class WebServiceClientConfiguration {
 
 	}
 
+	@Bean Transformer transformer() {
+		try {
+			return TransformerFactory.newInstance().newTransformer();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 	@Bean
 	Jaxb2Marshaller jaxb2Marshaller() {
 		Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
@@ -52,24 +62,42 @@ public class WebServiceClientConfiguration {
 		webServiceTemplate.setMarshaller(jaxb2Marshaller());
 		webServiceTemplate.setUnmarshaller(jaxb2Marshaller());
 		webServiceTemplate.setDefaultUri(defaultUri);
+		ClientInterceptor clientInterceptor = new ClientInterceptor() {
+			@Override
+			public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
+				return true;
+			}
+
+			@Override
+			public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
+				return true;
+			}
+
+			@Override
+			public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
+				return true;
+			}
+
+			@Override
+			public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
+				try {
+					System.out.println("Request :");
+					messageContext.getRequest().writeTo(System.out);
+					System.out.println("\nResponse : ");
+					messageContext.getResponse().writeTo(System.out);
+					System.out.println();
+				} catch (IOException ignored) {
+				}
+			}
+		};
+
+		webServiceTemplate.setInterceptors(new ClientInterceptor[] { clientInterceptor });
 		return webServiceTemplate;
 	}
 
 	@Bean
 	public JAXBContext jaxbContext() throws Exception {
 		return JAXBContext.newInstance(jaxbPackage);
-	}
-
-	@Bean
-	@Scope("prototype")
-	public SaajSoapMessage saajSoapMessage() throws Exception {
-		return soapMessageFactory().createWebServiceMessage();
-	}
-
-	@Bean
-	public SaajSoapMessageFactory soapMessageFactory() throws Exception {
-		MessageFactory messageFactory = MessageFactory.newInstance();
-		return new SaajSoapMessageFactory(messageFactory);
 	}
 
 	@Bean
@@ -80,6 +108,7 @@ public class WebServiceClientConfiguration {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
+
 	@Bean
 	public Unmarshaller unmarshaller() {
 		try {
